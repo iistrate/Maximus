@@ -3,15 +3,17 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 	Rigidbody2D rigidBody;
-	Transform player;
-	public float speed;
+	Transform firing;
 	int direction;
+	private float speed;
 
-	void Start() {
+	void Awake() {
+		speed = 10;
 		rigidBody = GetComponent<Rigidbody2D> ();
-		player = GameObject.Find ("Player").GetComponent<Transform> ();
-		direction = player.localScale.x > 0 ? 1 : -1;
-
-		rigidBody.velocity = new Vector2(transform.right.x * direction, 0) * speed;
+		firing = GameObject.FindWithTag("Player").GetComponent<Transform> ();
+		//flip bullet
+		direction = firing.localScale.x > 0 ? 1 : -1;
+		rigidBody.velocity = transform.TransformDirection(Vector2.right * direction * speed);
 	}
+
 }

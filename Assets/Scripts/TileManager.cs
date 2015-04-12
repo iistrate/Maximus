@@ -5,6 +5,7 @@ public class TileManager : MonoBehaviour {
 
 	public List <GameObject> groundTiles;
 	public List <GameObject> boxTiles;
+	public List <GameObject> enemies;
 	public int levelSize;
 
 	//holds all our tiles in hierarchy
@@ -16,7 +17,7 @@ public class TileManager : MonoBehaviour {
 	float bottomPos = -1.35f;
 
 
-	int maxPlatforms = 50;
+	int maxPlatforms;
 
 	int minHeight = 1;
 	int maxHeight = 2;
@@ -33,6 +34,7 @@ public class TileManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		maxPlatforms = levelSize;
 		groundHolder = new GameObject ("GroundTileHolder").transform;
 		surpriseHolder = new GameObject ("SurpriseHolder").transform;
 		SpawnPlatforms ();
@@ -79,19 +81,18 @@ public class TileManager : MonoBehaviour {
 	}
 	void placeSurprise(float x, float y) {
 		int dice = Random.Range (1, 6);
-		if (dice > 0) {
-			GameObject box = boxTiles [Random.Range (0, boxTiles.Count)];
-			Vector3 position = box.transform.position;
-			//set above platform
-			position.y = y + maxHeight;
-			//set in middle of platform
-			position.x = x;
-			box.transform.position = position;
-			GameObject instance = Instantiate(box, position, Quaternion.identity) as GameObject;
-			instance.transform.SetParent(surpriseHolder);
+		GameObject surprise = enemies [Random.Range (0, enemies.Count)];
+		if (dice > 3) {
+			surprise = boxTiles [Random.Range (0, boxTiles.Count)];
 		}
-		else {
-		}
+		Vector3 position = surprise.transform.position;
+		//set above platform
+		position.y = y + maxHeight;
+		//set in middle of platform
+		position.x = x;
+		surprise.transform.position = position;
+		GameObject instance = Instantiate(surprise, position, Quaternion.identity) as GameObject;
+		instance.transform.SetParent(surpriseHolder);
 	}
 	
 }

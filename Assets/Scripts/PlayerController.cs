@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 			jumping = true;
 		} 
 		if (Input.GetKeyDown (KeyCode.Space)) {
-			Instantiate(bullet, shotSpawn.position, Quaternion.identity);
+			GameObject instance = Instantiate(bullet, shotSpawn.position, Quaternion.identity) as GameObject;
 			fire = true;
 		}
 		if (Input.GetKeyUp(KeyCode.Space)) {
@@ -77,7 +77,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		if (collision.gameObject.tag == "Ground") {
+		string tag = collision.gameObject.tag;
+		if (tag == "Ground" || tag == "Enemy") {
 			jumping = false;
 		}
 	}
