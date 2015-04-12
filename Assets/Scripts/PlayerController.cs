@@ -7,11 +7,14 @@ public class PlayerController : MonoBehaviour {
 	bool jumping = false;
 	bool flipped = false;
 	bool flip = false;
-	bool flying = false;
+	bool fire = false;
 	string animation = "Player_Idle";
 
-	public int speed;
-	public int jumpFactor;
+	public int maxSpeed;
+	public float jumpFactor;
+
+	public GameObject bullet;
+	public Transform shotSpawn;
 
 	// Use this for initialization
 	void Start () {
@@ -21,29 +24,42 @@ public class PlayerController : MonoBehaviour {
 	// Physics update
 	void FixedUpdate() {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
-		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0.0f);
-		rigidBody.velocity = movement * speed;
+		float horizontalForce = 30f;
 
-		if (Input.GetKeyDown (KeyCode.Space) && jumping == false && !flying) {
+		if (rigidBody.velocity.x * moveHorizontal < maxSpeed) {
+			rigidBody.AddForce (Vector2.right * moveHorizontal * horizontalForce);
+		}
+		if (rigidBody.velocity.x > maxSpeed) {
+			rigidBody.velocity = new Vector2(Mathf.Sign(rigidBody.velocity.x) * maxSpeed, rigidBody.velocity.y);
+		}
+	}
+	//Game update
+	void Update() {
+		if (Input.GetKeyDown (KeyCode.UpArrow) && jumping == false) {
 			rigidBody.AddForce(Vector3.up * jumpFactor, ForceMode2D.Impulse);
 			jumping = true;
 		} 
-		else if (Input.GetKeyDown (KeyCode.UpArrow) && flying == false) {
-			flying = true;
+		if (Input.GetKeyDown (KeyCode.Space) && !jumping) {
+			Instantiate(bullet, shotSpawn.position, Quaternion.identity);
+			bullet.transform.SetParent(shotSpawn);
+			fire = true;
 		}
-
-
-		if (jumping || flying) {
+		if (Input.GetKeyUp(KeyCode.Space)) {
+			fire = false;
+		}
+		
+		if (jumping) {
 			animation = "Player_Jumping";
-		} 
-		else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
+		} else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
 			animation = "Player_Walking";
+		} 
+		else if (fire) {
+			animation = "Player_Fire";
 		}
 		else {
 			animation = "Player_Idle";
 		}
-
+		
 		if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
 			if ((flipped && Input.GetKey (KeyCode.RightArrow)) || (!flipped && Input.GetKey(KeyCode.LeftArrow))) {
 				flip = true;
@@ -62,7 +78,6 @@ public class PlayerController : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D collision) {
 		if (collision.gameObject.tag == "Ground") {
 			jumping = false;
-			flying = false;
 		}
 	}
 }

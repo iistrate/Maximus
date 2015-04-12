@@ -14,6 +14,17 @@ public class TileManager : MonoBehaviour {
 	float leftPos = -10.75f;
 	float bottomPos = -1.2f;
 
+
+	int maxPlatforms = 50;
+
+	int minHeight = 1;
+	int maxHeight = 2;
+	int minWidth = 2;
+	int maxWidth = 8;
+
+	int xLocation = 5;
+	int yLocation = 10;
+
 	//image sizes
 	float imageW = 0.64f;
 	float imageH = 0.64f;
@@ -21,6 +32,8 @@ public class TileManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		groundHolder = new GameObject ("GroundTileHolder").transform;
+
+		SpawnPlatforms ();
 
 		int counter = 0;
 		while (levelSize != 0) {
@@ -37,6 +50,27 @@ public class TileManager : MonoBehaviour {
 			counter++;
 		}
 
+	}
+
+	void SpawnPlatforms() {
+		while (maxPlatforms != 0) {
+			GameObject platform = groundTiles[Random.Range(0, groundTiles.Count)];
+
+			Vector3 scale = platform.transform.localScale;
+			scale.x = Random.Range(minWidth, maxWidth);
+			scale.y = Random.Range(minHeight, maxHeight);
+			platform.transform.localScale = scale;
+
+			Vector3 position = platform.transform.position;
+			position.y = Random.Range(4, yLocation);
+			position.x = Random.Range(0, levelSize);
+			platform.transform.position = position;
+
+			Instantiate(platform, position, Quaternion.identity);
+			platform.transform.SetParent(groundHolder);
+
+			maxPlatforms--;
+		}
 	}
 	
 }
