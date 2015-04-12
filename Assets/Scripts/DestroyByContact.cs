@@ -13,6 +13,9 @@ public class DestroyByContact : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D coll) {
 		if (coll.gameObject.tag == "Bullet") {
+			if (this.gameObject.tag == "Player") {
+				gameController.gameOver();
+			}
 			Destroy(this.gameObject);
 			gameController.addScore (scoreValue);
 		}

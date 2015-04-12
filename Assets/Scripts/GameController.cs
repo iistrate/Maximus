@@ -4,14 +4,47 @@ using System.Collections;
 public class GameController : MonoBehaviour {
 
 	public GUIText scoreText;
-	private int score;
+	public GUIText gameOverText;
+	public Transform tileManager;
+
+	int score;
+
+	bool b_gameOver;
+	bool b_restart;
 
 	// Use this for initialization
 	void Start () {
+		b_gameOver = false;
+		b_gameOver = false;
+
 		score = 0;
 		UpdateScore ();
+		startNewGame();
 	}
-	
+
+	void Update() {
+		if (b_gameOver) {
+			if (Input.GetKey(KeyCode.R)) {
+				b_restart = true;
+				b_gameOver = false;
+			}
+		}
+		if (b_restart) {
+			Application.LoadLevel(Application.loadedLevel);
+			b_restart = false;
+		}
+	}
+
+	void startNewGame() {
+		Instantiate(tileManager, new Vector3(0, 0, 0), Quaternion.identity);
+		gameOverText.text = "";
+	}
+
+	public void gameOver() {
+		gameOverText.text = "Game Over, Thanks for playing!! Press R to restart.";
+		b_gameOver = true;
+	}
+
 	// Update is called once per frame
 	void UpdateScore () {
 		scoreText.text = "Score: " + score;
