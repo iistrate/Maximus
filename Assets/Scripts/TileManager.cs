@@ -9,6 +9,7 @@ public class TileManager : MonoBehaviour {
 
 	//holds all our tiles in hierarchy
 	Transform groundHolder;
+	Transform surpriseHolder;
 
 	//position for left bottom
 	float leftPos = -10.75f;
@@ -19,11 +20,12 @@ public class TileManager : MonoBehaviour {
 
 	int minHeight = 1;
 	int maxHeight = 2;
-	int minWidth = 2;
-	int maxWidth = 8;
+	int minWidth = 5;
+	int maxWidth = 15;
 
-	int xLocation = 5;
-	int yLocation = 10;
+	int jumpX = 10;
+	int jumpY = 3;
+	int init = 10;
 
 	//image sizes
 	float imageW = 0.64f;
@@ -32,44 +34,63 @@ public class TileManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		groundHolder = new GameObject ("GroundTileHolder").transform;
-
+		surpriseHolder = new GameObject ("SurpriseHolder").transform;
 		SpawnPlatforms ();
-
-		int counter = 0;
-		while (levelSize != 0) {
-			//select tile
-			GameObject toInstantiate = groundTiles[Random.Range(0, groundTiles.Count)];
-			//get size
-			Vector3 position = new Vector3(leftPos + (float)counter*imageW, bottomPos,0f);
-			//instantiate object at position with no rotation
-			GameObject instance = Instantiate(toInstantiate, position, Quaternion.identity) as GameObject;
-			//add child to hierarchy
-			instance.transform.SetParent(groundHolder);
-
-			levelSize--;
-			counter++;
-		}
-
 	}
 
 	void SpawnPlatforms() {
+		//get player position
+		GameObject player = GameObject.Find ("Player");
+		Vector2 pos = player.GetComponent<Transform> ().position;
+
+		//calculate initial platform x and y
+		float initialPlatformX = pos.x;
+		float initialPlatformY = pos.y - player.transform.localScale.y; 
+
 		while (maxPlatforms != 0) {
 			GameObject platform = groundTiles[Random.Range(0, groundTiles.Count)];
 
+			//platform size
 			Vector3 scale = platform.transform.localScale;
 			scale.x = Random.Range(minWidth, maxWidth);
 			scale.y = Random.Range(minHeight, maxHeight);
 			platform.transform.localScale = scale;
 
+			//platform position
 			Vector3 position = platform.transform.position;
-			position.y = Random.Range(4, yLocation);
-			position.x = Random.Range(0, levelSize);
+			position.x = initialPlatformX;
+			position.y = initialPlatformY;
 			platform.transform.position = position;
 
+			//instantiate
 			GameObject instance = Instantiate(platform, position, Quaternion.identity) as GameObject;
+			//add to ground hierarchy
 			instance.transform.SetParent(groundHolder);
 
+
+			initialPlatformX += jumpX;
+			initialPlatformY = Random.Range(bottomPos, initialPlatformY+jumpY);
+
+			//place player surprise
+			placeSurprise(initialPlatformX, initialPlatformY);
+
 			maxPlatforms--;
+		}
+	}
+	void placeSurprise(float x, float y) {
+		int dice = Random.Range (1, 6);
+		if (dice > 0) {
+			GameObject box = boxTiles [Random.Range (0, boxTiles.Count)];
+			Vector3 position = box.transform.position;
+			//set above platform
+			position.y = y + maxHeight;
+			//set in middle of platform
+			position.x = x;
+			box.transform.position = position;
+			GameObject instance = Instantiate(box, position, Quaternion.identity) as GameObject;
+			instance.transform.SetParent(surpriseHolder);
+		}
+		else {
 		}
 	}
 	

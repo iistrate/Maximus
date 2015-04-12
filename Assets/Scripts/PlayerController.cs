@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 			rigidBody.AddForce(Vector3.up * jumpFactor, ForceMode2D.Impulse);
 			jumping = true;
 		} 
-		if (Input.GetKeyDown (KeyCode.Space) && !jumping) {
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			Instantiate(bullet, shotSpawn.position, Quaternion.identity);
 			fire = true;
 		}
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour {
 			fire = false;
 		}
 		
-		if (jumping) {
+		if (jumping && !fire) {
 			animation = "Player_Jumping";
 		} 
 		else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
