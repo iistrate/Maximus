@@ -41,7 +41,6 @@ public class PlayerController : MonoBehaviour {
 		} 
 		if (Input.GetKeyDown (KeyCode.Space) && !jumping) {
 			Instantiate(bullet, shotSpawn.position, Quaternion.identity);
-			bullet.transform.SetParent(shotSpawn);
 			fire = true;
 		}
 		if (Input.GetKeyUp(KeyCode.Space)) {
@@ -50,7 +49,8 @@ public class PlayerController : MonoBehaviour {
 		
 		if (jumping) {
 			animation = "Player_Jumping";
-		} else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
+		} 
+		else if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
 			animation = "Player_Walking";
 		} 
 		else if (fire) {
@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour {
 				Vector3 scale = transform.localScale;
 				scale.x *= -1;
 				transform.localScale = scale;
+
 				flip = false;
 				flipped = flipped == true ? false : true;
 			}

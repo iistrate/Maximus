@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour {
 
 	//position for left bottom
 	float leftPos = -10.75f;
-	float bottomPos = -1.2f;
+	float bottomPos = -1.35f;
 
 
 	int maxPlatforms = 50;
@@ -66,8 +66,8 @@ public class TileManager : MonoBehaviour {
 			position.x = Random.Range(0, levelSize);
 			platform.transform.position = position;
 
-			Instantiate(platform, position, Quaternion.identity);
-			platform.transform.SetParent(groundHolder);
+			GameObject instance = Instantiate(platform, position, Quaternion.identity) as GameObject;
+			instance.transform.SetParent(groundHolder);
 
 			maxPlatforms--;
 		}
