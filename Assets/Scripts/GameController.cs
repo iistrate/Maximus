@@ -5,6 +5,7 @@ public class GameController : MonoBehaviour {
 
 	public GUIText scoreText;
 	public GUIText gameOverText;
+	public GUIText gameHint;
 	public Transform tileManager;
 
 	int score;
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour {
 	void Start () {
 		b_gameOver = false;
 		b_gameOver = false;
+		gameHint.text = "Hint: You can double jump when hitting a wall.";
 
 		score = 0;
 		UpdateScore ();

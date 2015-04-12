@@ -9,17 +9,21 @@ public class PlayerController : MonoBehaviour {
 	bool flip = false;
 	bool fire = false;
 	string animation = "Player_Idle";
+	int direction;
+	public float fireRate = 0.5F;
+	private float nextFire = 0.0F;
 
 	public int maxSpeed;
 	public float jumpFactor;
 
-	public GameObject bullet;
+	public Rigidbody2D bullet;
 	public Transform shotSpawn;
 
 	// Use this for initialization
 	void Start () {
 		rigidBody = GetComponent<Rigidbody2D> ();	
 		animator = GetComponent<Animator> ();
+		direction = 1;
 	}
 	// Physics update
 	void FixedUpdate() {
@@ -39,8 +43,11 @@ public class PlayerController : MonoBehaviour {
 			rigidBody.AddForce(Vector3.up * jumpFactor, ForceMode2D.Impulse);
 			jumping = true;
 		} 
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			GameObject instance = Instantiate(bullet, shotSpawn.position, Quaternion.identity) as GameObject;
+		if (Input.GetKeyDown (KeyCode.Space) && Time.time > nextFire) {
+			nextFire = Time.time + fireRate;
+			Rigidbody2D instance = Instantiate(bullet, shotSpawn.position, Quaternion.identity) as Rigidbody2D;
+			int speed = 10;
+			instance.velocity = transform.right * speed * direction;
 			fire = true;
 		}
 		if (Input.GetKeyUp(KeyCode.Space)) {
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviour {
 			if (flip) {
 				Vector3 scale = transform.localScale;
 				scale.x *= -1;
+				direction *= -1;
 				transform.localScale = scale;
 
 				flip = false;
