@@ -1,2 +1,4 @@
 # Xeon2D
-My first attempt at Unity3D.
+Playing with C#, and Unity3D.
+
+Sound/Graphics from opengameart.org
