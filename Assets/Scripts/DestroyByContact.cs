@@ -20,7 +20,7 @@ public class DestroyByContact : MonoBehaviour {
 				gameController.gameOver();
 			}
 			Destroy(this.gameObject);
-			Destroy(gameObject);
+			Destroy(coll.gameObject);
 			gameController.addScore (scoreValue);
 		}
 	}}
