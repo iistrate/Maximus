@@ -25,6 +25,11 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Update() {
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			Application.LoadLevel(0);
+		}
+
 		if (b_gameOver) {
 			if (Input.GetKey(KeyCode.R)) {
 				b_restart = true;
