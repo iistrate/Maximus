@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour {
 			if (hit.rigidbody.tag == "Player" && Time.time > nextFire) {
 				nextFire = Time.time + fireRate;
 				Rigidbody2D instance = Instantiate (bullet, shotSpawn.position, Quaternion.identity) as Rigidbody2D;
-				int speed = 10;
+				int speed = 7;
 				instance.velocity = transform.right * speed * direction;
 			}
 		}

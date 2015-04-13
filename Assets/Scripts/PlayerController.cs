@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
 	int direction;
 	public float fireRate = 0.5F;
 	private float nextFire = 0.0F;
+	public int health;
+	public GUIText healthText;
 
 	public int maxSpeed;
 	public float jumpFactor;
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour {
 		rigidBody = GetComponent<Rigidbody2D> ();	
 		animator = GetComponent<Animator> ();
 		direction = 1;
+		healthText.text = "Health: " + health;
 	}
 	// Physics update
 	void FixedUpdate() {
@@ -40,9 +43,12 @@ public class PlayerController : MonoBehaviour {
 	//Game update
 	void Update() {
 		if (Input.GetKeyDown (KeyCode.UpArrow) && jumping == false) {
-			rigidBody.AddForce(Vector3.up * jumpFactor, ForceMode2D.Impulse);
+			rigidBody.AddForce (Vector3.up * jumpFactor, ForceMode2D.Impulse);
 			jumping = true;
 		} 
+		else if (Input.GetKeyDown (KeyCode.DownArrow) && jumping == true) {
+			rigidBody.AddForce (Vector3.down * (jumpFactor / 2), ForceMode2D.Impulse);
+		}
 		if (Input.GetKeyDown (KeyCode.Space) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Rigidbody2D instance = Instantiate(bullet, shotSpawn.position, Quaternion.identity) as Rigidbody2D;
@@ -89,5 +95,18 @@ public class PlayerController : MonoBehaviour {
 		if (tag == "Ground" || tag == "Enemy") {
 			jumping = false;
 		}
+	}
+
+	public int getHealth() {
+		return health;
+	}
+	public void addHealth() {
+		health += 50;
+		healthText.text = "Health: " + health;
+	}
+
+	public void Hit() {
+		health -= 50;
+		healthText.text = "Health: " + health;
 	}
 }

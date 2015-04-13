@@ -17,7 +17,20 @@ public class DestroyByContact : MonoBehaviour {
 			explosion.GetComponent<Animator>().StartPlayback();
 			Instantiate(explosion, transform.position, transform.rotation);
 			if (this.gameObject.tag == "Player") {
-				gameController.gameOver();
+				PlayerController playerControler = GetComponentInChildren<PlayerController>();
+				if (playerControler.getHealth() > 50) {
+					Destroy(coll.gameObject);
+					playerControler.Hit();
+					return;
+				}
+				else {
+					playerControler.Hit();
+					gameController.gameOver();
+				}
+			}
+			else if (this.gameObject.tag == "BoxSmall") {
+				GameObject health = Instantiate(Resources.Load("Health")) as GameObject;
+				health.transform.position = this.gameObject.transform.position;
 			}
 			Destroy(this.gameObject);
 			Destroy(coll.gameObject);
