@@ -13,8 +13,11 @@ public class DestroyByBoundary : MonoBehaviour {
 		if (other.tag != "Ground") {
 			if (other.gameObject.tag == "Player") {
 				gameController.gameOver();
+				Destroy (other.gameObject);
 			}
-			Destroy (other.gameObject);
+			if (other.gameObject.tag == "Bullet") {
+				Destroy (other.gameObject);
+			}
 		}
 	}
 }
